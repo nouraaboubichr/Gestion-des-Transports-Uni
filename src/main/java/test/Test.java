@@ -6,7 +6,7 @@ package test;
 import beans.Bus;
 import beans.Etudiant;
 import beans.AbonnementTransport;
-import services.AbonnementTransportSevices;
+import services.AbonnementTransportServices;
 import services.BusServices;
 import services.EtudiantServices;
 import java.sql.Date;
@@ -21,7 +21,7 @@ public class Test {
     public static void main(String[] args) {
         BusServices busDao = new BusServices();
         EtudiantServices etudiantDao = new EtudiantServices();
-        AbonnementTransportSevices abonnementDao = new AbonnementTransportSevices();
+        AbonnementTransportServices abonnementDao = new AbonnementTransportServices();
 
         //  creation d'un bus
         System.out.println(" Test d'ajout d'un bus :");
