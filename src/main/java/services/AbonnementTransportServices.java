@@ -6,6 +6,8 @@ package services;
 
 import dao.IDao;
 import beans.AbonnementTransport;
+import beans.Bus;
+import beans.Etudiant;
 import connexion.Connexion;
 
 import java.sql.Connection;
@@ -27,12 +29,12 @@ public class AbonnementTransportServices implements IDao<AbonnementTransport> {
         try {
             String query = "INSERT INTO abonnement_transport (bus_id, etudiant_id, date_abonnement) VALUES (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, abonnement.getBusId());
-            ps.setInt(2, abonnement.getEtudiantId());
+            ps.setInt(1, abonnement.getBus().getId());  
+            ps.setInt(2, abonnement.getEtudiant().getId());  
             ps.setDate(3, abonnement.getDateAbonnement());
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println("Erreur lors de l'ajout : " + ex.getMessage());
             return false;
         }
     }
@@ -42,13 +44,12 @@ public class AbonnementTransportServices implements IDao<AbonnementTransport> {
         try {
             String query = "UPDATE abonnement_transport SET bus_id = ?, etudiant_id = ?, date_abonnement = ? WHERE id = ?";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, abonnement.getBusId());
-            ps.setInt(2, abonnement.getEtudiantId());
+            ps.setInt(1, abonnement.getBus().getId());
+            ps.setInt(2, abonnement.getEtudiant().getId());
             ps.setDate(3, abonnement.getDateAbonnement());
-            ps.setInt(4, abonnement.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println("Erreur lors de la mise à jour : " + ex.getMessage());
             return false;
         }
     }
@@ -61,7 +62,7 @@ public class AbonnementTransportServices implements IDao<AbonnementTransport> {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println("Erreur lors de la suppression : " + ex.getMessage());
             return false;
         }
     }
@@ -74,10 +75,12 @@ public class AbonnementTransportServices implements IDao<AbonnementTransport> {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new AbonnementTransport(rs.getInt("id"), rs.getInt("bus_id"), rs.getInt("etudiant_id"), rs.getDate("date_abonnement"));
+                Bus bus = new Bus(rs.getInt("bus_id"), "", 0); 
+                Etudiant etudiant = new Etudiant(rs.getInt("etudiant_id"), "", "", ""); 
+                return new AbonnementTransport(bus, etudiant, rs.getDate("date_abonnement"));
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println("Erreur lors de la recherche : " + ex.getMessage());
         }
         return null;
     }
@@ -90,10 +93,12 @@ public class AbonnementTransportServices implements IDao<AbonnementTransport> {
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                abonnements.add(new AbonnementTransport(rs.getInt("id"), rs.getInt("bus_id"), rs.getInt("etudiant_id"), rs.getDate("date_abonnement")));
+                Bus bus = new Bus(rs.getInt("bus_id"), "", 0);
+                Etudiant etudiant = new Etudiant(rs.getInt("etudiant_id"), "", "", "");
+                abonnements.add(new AbonnementTransport(bus, etudiant, rs.getDate("date_abonnement")));
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println("Erreur lors de la récupération : " + ex.getMessage());
         }
         return abonnements;
     }
