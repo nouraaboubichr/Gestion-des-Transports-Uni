@@ -19,7 +19,6 @@ import java.util.List;
  * @author hp
  */
 
-
 public class AbonnementTransportServices implements IDao<AbonnementTransport> {
     private Connection connection = Connexion.getInstance().getCn();
 
@@ -75,12 +74,7 @@ public class AbonnementTransportServices implements IDao<AbonnementTransport> {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new AbonnementTransport(
-                    rs.getInt("id"),
-                    rs.getInt("bus_id"),
-                    rs.getInt("etudiant_id"),
-                    rs.getDate("date_abonnement")
-                );
+                return new AbonnementTransport(rs.getInt("id"), rs.getInt("bus_id"), rs.getInt("etudiant_id"), rs.getDate("date_abonnement"));
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -96,12 +90,7 @@ public class AbonnementTransportServices implements IDao<AbonnementTransport> {
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                abonnements.add(new AbonnementTransport(
-                    rs.getInt("id"),
-                    rs.getInt("bus_id"),
-                    rs.getInt("etudiant_id"),
-                    rs.getDate("date_abonnement")
-                ));
+                abonnements.add(new AbonnementTransport(rs.getInt("id"), rs.getInt("bus_id"), rs.getInt("etudiant_id"), rs.getDate("date_abonnement")));
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -109,4 +98,3 @@ public class AbonnementTransportServices implements IDao<AbonnementTransport> {
         return abonnements;
     }
 }
-

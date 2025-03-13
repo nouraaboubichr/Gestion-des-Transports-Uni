@@ -4,12 +4,6 @@
  */
 package services;
 
-/**
- *
- * @author hp
- */
-
-
 import dao.IDao;
 import beans.Bus;
 import connexion.Connexion;
@@ -20,6 +14,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ *
+ * @author hp
+ */
 
 public class BusServices implements IDao<Bus> {
     private Connection connection = Connexion.getInstance().getCn();
@@ -74,11 +73,7 @@ public class BusServices implements IDao<Bus> {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new Bus(
-                    rs.getInt("id"),
-                    rs.getString("immatriculation"),
-                    rs.getInt("nombre_places")
-                );
+                return new Bus(rs.getInt("id"), rs.getString("immatriculation"), rs.getInt("nombre_places"));
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -94,11 +89,7 @@ public class BusServices implements IDao<Bus> {
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                buses.add(new Bus(
-                    rs.getInt("id"),
-                    rs.getString("immatriculation"),
-                    rs.getInt("nombre_places")
-                ));
+                buses.add(new Bus(rs.getInt("id"), rs.getString("immatriculation"), rs.getInt("nombre_places")));
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -106,4 +97,3 @@ public class BusServices implements IDao<Bus> {
         return buses;
     }
 }
-

@@ -4,12 +4,6 @@
  */
 package services;
 
-/**
- *
- * @author hp
- */
-
-
 import dao.IDao;
 import beans.Etudiant;
 import connexion.Connexion;
@@ -20,6 +14,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ *
+ * @author hp
+ */
 
 public class EtudiantServices implements IDao<Etudiant> {
     private Connection connection = Connexion.getInstance().getCn();
