@@ -70,7 +70,7 @@ public class Test {
                 System.out.println(" - Bus ID: " + a.getBus().getId() + " | Étudiant ID: " + a.getEtudiant().getId() + " | Date: " + a.getDateAbonnement());
             }
 
-            // Suppression du dernier abonnement
+            // delete abonnement
             System.out.println("\n===== Suppression du dernier abonnement =====");
             if (abonnementDao.delete(abonnement)) {
                 System.out.println("Abonnement supprimé avec succès !");
