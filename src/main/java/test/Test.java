@@ -10,12 +10,12 @@ import services.AbonnementTransportServices;
 import services.BusServices;
 import services.EtudiantServices;
 import java.sql.Date;
+import java.util.List;
 
 /**
  *
  * @author hp
  */
-
 public class Test {
 
     public static void main(String[] args) {
@@ -23,62 +23,75 @@ public class Test {
         EtudiantServices etudiantDao = new EtudiantServices();
         AbonnementTransportServices abonnementDao = new AbonnementTransportServices();
 
-        //  creation d'un bus
-        System.out.println(" Test d'ajout d'un bus :");
-        Bus bus = new Bus("THJ-123", 40);  
+        // Create d'un bus
+        System.out.println("Test d'ajout d'un bus :");
+        Bus bus = new Bus("THJ-123", 40);
         if (busDao.create(bus)) {
-            System.out.println(" Bus ajouté avec succès !");
+            System.out.println("Bus ajouté avec succès !");
         } else {
             System.out.println("Échec de l'ajout du bus.");
         }
 
-        //  creation d'un étudiant 
-        System.out.println(" Test d'ajout d'un étudiant :");
+        // Create d'un étudiant
+        System.out.println("\nTest d'ajout d'un étudiant :");
         Etudiant etudiant = new Etudiant("Aboubichr", "Noura", "nouraaboubichr@gmail.com");
         if (etudiantDao.create(etudiant)) {
             System.out.println("Étudiant ajouté avec succès !");
         } else {
-            System.out.println(" Échec de l'ajout de l'étudiant.");
+            System.out.println("Échec de l'ajout de l'étudiant.");
         }
 
-        int busId = busDao.findAll().get(busDao.findAll().size() - 1).getId();
-        int etudiantId = etudiantDao.findAll().get(etudiantDao.findAll().size() - 1).getId();
+        // les  listes de bus et étudiants
+        List<Bus> busList = busDao.findAll();
+        List<Etudiant> etudiantList = etudiantDao.findAll();
 
-        // creation d'un abonnement 
-        System.out.println(" Test d'ajout d'un abonnement :");
-        AbonnementTransport abonnement = new AbonnementTransport(busId, etudiantId, Date.valueOf("2025-03-03"));
-        if (abonnementDao.create(abonnement)) {
-            System.out.println(" Abonnement ajouté avec succès !");
+        if (!busList.isEmpty() && !etudiantList.isEmpty()) {
+            int busId = busList.get(busList.size() - 1).getId();
+            int etudiantId = etudiantList.get(etudiantList.size() - 1).getId();
+
+            // Create d'un abonnement
+            System.out.println("\nTest d'ajout d'un abonnement :");
+            AbonnementTransport abonnement = new AbonnementTransport(busId, etudiantId, Date.valueOf("2025-03-03"));
+            if (abonnementDao.create(abonnement)) {
+                System.out.println("Abonnement ajouté avec succès !");
+            } else {
+                System.out.println("Échec de l'ajout de l'abonnement.");
+            }
         } else {
-            System.out.println(" Échec de l'ajout de l'abonnement.");
+            System.out.println("\nErreur : Impossible de créer un abonnement sans bus ou étudiant.");
         }
 
-        //  Afficher tous les bus
-        System.out.println("\n Liste des bus :");
-        for (Bus b : busDao.findAll()) {
+
+        System.out.println("\nListe des bus :");
+        for (Bus b : busList) {
             System.out.println(" - " + b.getId() + " | " + b.getImmatriculation() + " | " + b.getNombrePlaces() + " places");
         }
 
-        // Afficher tous les étudiants 
-        System.out.println("\n Liste des étudiants :");
-        for (Etudiant e : etudiantDao.findAll()) {
+        System.out.println("\nListe des étudiants :");
+        for (Etudiant e : etudiantList) {
             System.out.println(" - " + e.getId() + " | " + e.getNom() + " " + e.getPrenom() + " | " + e.getEmail());
         }
 
-        //  Afficher tous les abonnements 
-        System.out.println("\n Liste des abonnements :");
-        for (AbonnementTransport a : abonnementDao.findAll()) {
+        List<AbonnementTransport> abonnementList = abonnementDao.findAll();
+        System.out.println("\nListe des abonnements :");
+        for (AbonnementTransport a : abonnementList) {
             System.out.println(" - " + a.getId() + " | Bus ID: " + a.getBusId() + " | Étudiant ID: " + a.getEtudiantId() + " | Date: " + a.getDateAbonnement());
         }
 
-       /* delete 
-       int abonnementId = abonnementDao.findAll().get(abonnementDao.findAll().size() - 1).getId();
-        abonnementDao.delete(abonnementId);
+        // delete des enregistrements 
+        /*
+        if (!abonnementList.isEmpty()) {
+            int abonnementId = abonnementList.get(abonnementList.size() - 1).getId();
+            abonnementDao.delete(abonnementId);
+        }
 
-         busDao.delete(busId);
- 
-        etudiantDao.delete(etudiantId);
-     
-       */
+        if (!busList.isEmpty()) {
+            busDao.delete(busList.get(busList.size() - 1).getId());
+        }
+
+        if (!etudiantList.isEmpty()) {
+            etudiantDao.delete(etudiantList.get(etudiantList.size() - 1).getId());
+        }
+        */
     }
 }
