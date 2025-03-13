@@ -25,7 +25,7 @@ public class Test {
 
         // Create d'un bus
         System.out.println("Test d'ajout d'un bus :");
-        Bus bus = new Bus("THJ-123", 40);
+        Bus bus = new Bus(0, "THJ-123", 40);  // 0 car l'ID est généré par la BDD
         if (busDao.create(bus)) {
             System.out.println("Bus ajouté avec succès !");
         } else {
@@ -34,24 +34,24 @@ public class Test {
 
         // Create d'un étudiant
         System.out.println("\nTest d'ajout d'un étudiant :");
-        Etudiant etudiant = new Etudiant("Aboubichr", "Noura", "nouraaboubichr@gmail.com");
+        Etudiant etudiant = new Etudiant(0, "Aboubichr", "Noura", "nouraaboubichr@gmail.com");
         if (etudiantDao.create(etudiant)) {
             System.out.println("Étudiant ajouté avec succès !");
         } else {
             System.out.println("Échec de l'ajout de l'étudiant.");
         }
 
-        // les  listes de bus et étudiants
+        // les listes de bus et étudiants
         List<Bus> busList = busDao.findAll();
         List<Etudiant> etudiantList = etudiantDao.findAll();
 
         if (!busList.isEmpty() && !etudiantList.isEmpty()) {
-            int busId = busList.get(busList.size() - 1).getId();
-            int etudiantId = etudiantList.get(etudiantList.size() - 1).getId();
+            Bus lastBus = busList.get(busList.size() - 1);
+            Etudiant lastEtudiant = etudiantList.get(etudiantList.size() - 1);
 
-            // Create d'un abonnement
+             // Create d'un abonnement
             System.out.println("\nTest d'ajout d'un abonnement :");
-            AbonnementTransport abonnement = new AbonnementTransport(busId, etudiantId, Date.valueOf("2025-03-03"));
+            AbonnementTransport abonnement = new AbonnementTransport(lastBus, lastEtudiant, Date.valueOf("2025-03-03"));
             if (abonnementDao.create(abonnement)) {
                 System.out.println("Abonnement ajouté avec succès !");
             } else {
@@ -60,7 +60,6 @@ public class Test {
         } else {
             System.out.println("\nErreur : Impossible de créer un abonnement sans bus ou étudiant.");
         }
-
 
         System.out.println("\nListe des bus :");
         for (Bus b : busList) {
@@ -75,10 +74,10 @@ public class Test {
         List<AbonnementTransport> abonnementList = abonnementDao.findAll();
         System.out.println("\nListe des abonnements :");
         for (AbonnementTransport a : abonnementList) {
-            System.out.println(" - " + a.getId() + " | Bus ID: " + a.getBusId() + " | Étudiant ID: " + a.getEtudiantId() + " | Date: " + a.getDateAbonnement());
+            System.out.println(" - Bus ID: " + a.getBus().getId() + " | Étudiant ID: " + a.getEtudiant().getId() + " | Date: " + a.getDateAbonnement());
         }
 
-        // delete des enregistrements 
+        // delete  enregistrements
         /*
         if (!abonnementList.isEmpty()) {
             int abonnementId = abonnementList.get(abonnementList.size() - 1).getId();
