@@ -25,9 +25,8 @@ public class BusServices implements IDao<Bus> {
 
     @Override
     public boolean create(Bus bus) {
-        try {
-            String query = "INSERT INTO bus (immatriculation, nombre_places) VALUES (?, ?)";
-            PreparedStatement ps = connection.prepareStatement(query);
+        String query = "INSERT INTO bus (immatriculation, nombre_places) VALUES (?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, bus.getImmatriculation());
             ps.setInt(2, bus.getNombrePlaces());
             return ps.executeUpdate() > 0;
@@ -38,10 +37,21 @@ public class BusServices implements IDao<Bus> {
     }
 
     @Override
+    public boolean delete(Bus bus) {
+        String query = "DELETE FROM bus WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, bus.getId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
+
+    @Override
     public boolean update(Bus bus) {
-        try {
-            String query = "UPDATE bus SET immatriculation = ?, nombre_places = ? WHERE id = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        String query = "UPDATE bus SET immatriculation = ?, nombre_places = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, bus.getImmatriculation());
             ps.setInt(2, bus.getNombrePlaces());
             ps.setInt(3, bus.getId());
@@ -53,23 +63,9 @@ public class BusServices implements IDao<Bus> {
     }
 
     @Override
-    public boolean delete(int id) {
-        try {
-            String query = "DELETE FROM bus WHERE id = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-            return false;
-        }
-    }
-
-    @Override
     public Bus findById(int id) {
-        try {
-            String query = "SELECT * FROM bus WHERE id = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        String query = "SELECT * FROM bus WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -84,10 +80,9 @@ public class BusServices implements IDao<Bus> {
     @Override
     public List<Bus> findAll() {
         List<Bus> buses = new ArrayList<>();
-        try {
-            String query = "SELECT * FROM bus";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
+        String query = "SELECT * FROM bus";
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 buses.add(new Bus(rs.getInt("id"), rs.getString("immatriculation"), rs.getInt("nombre_places")));
             }

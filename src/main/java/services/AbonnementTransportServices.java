@@ -54,18 +54,21 @@ public class AbonnementTransportServices implements IDao<AbonnementTransport> {
         }
     }
 
-    @Override
-    public boolean delete(int id) {
-        try {
-            String query = "DELETE FROM abonnement_transport WHERE id = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            System.out.println("Erreur lors de la suppression : " + ex.getMessage());
-            return false;
-        }
+    
+public boolean delete(AbonnementTransport abonnement) {
+    try {
+        // Utilisation de bus_id et etudiant_id pour supprimer l'abonnement
+        String query = "DELETE FROM abonnement_transport WHERE bus_id = ? AND etudiant_id = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, abonnement.getBus().getId()); // On prend l'ID du bus
+        ps.setInt(2, abonnement.getEtudiant().getId()); // On prend l'ID de l'étudiant
+        return ps.executeUpdate() > 0;
+    } catch (SQLException ex) {
+        System.out.println("Erreur lors de la suppression : " + ex.getMessage());
+        return false;
     }
+}
+
 
     @Override
     public AbonnementTransport findById(int id) {

@@ -16,32 +16,33 @@ import java.util.List;
  *
  * @author hp
  */
-public class Test {
 
+
+public class Test {
     public static void main(String[] args) {
         BusServices busDao = new BusServices();
         EtudiantServices etudiantDao = new EtudiantServices();
         AbonnementTransportServices abonnementDao = new AbonnementTransportServices();
 
-        // Create d'un bus
-        System.out.println("Test d'ajout d'un bus :");
-        Bus bus = new Bus(0, "THJ-123", 40);  // 0 car l'ID est généré par la BDD
+        System.out.println("===== Test d'ajout d'un bus =====");
+        Bus bus = new Bus("THJ-123", 40);
         if (busDao.create(bus)) {
-            System.out.println("Bus ajouté avec succès !");
+            System.out.println(" Bus ajouté avec succès !");
         } else {
-            System.out.println("Échec de l'ajout du bus.");
+            System.out.println(" Échec de l'ajout du bus.");
+            return;  // Arrêter le programme si l'ajout échoue
         }
 
-        // Create d'un étudiant
-        System.out.println("\nTest d'ajout d'un étudiant :");
-        Etudiant etudiant = new Etudiant(0, "Aboubichr", "Noura", "nouraaboubichr@gmail.com");
+        System.out.println("\n===== Test d'ajout d'un étudiant =====");
+        Etudiant etudiant = new Etudiant("Aboubichr", "Noura", "nouraaboubichr@gmail.com");
         if (etudiantDao.create(etudiant)) {
-            System.out.println("Étudiant ajouté avec succès !");
+            System.out.println(" Étudiant ajouté avec succès !");
         } else {
-            System.out.println("Échec de l'ajout de l'étudiant.");
+            System.out.println(" Échec de l'ajout de l'étudiant.");
+            return;
         }
 
-        // les listes de bus et étudiants
+        // Récupérer les bus et étudiants
         List<Bus> busList = busDao.findAll();
         List<Etudiant> etudiantList = etudiantDao.findAll();
 
@@ -49,48 +50,46 @@ public class Test {
             Bus lastBus = busList.get(busList.size() - 1);
             Etudiant lastEtudiant = etudiantList.get(etudiantList.size() - 1);
 
-             // Create d'un abonnement
-            System.out.println("\nTest d'ajout d'un abonnement :");
+            System.out.println("\n===== Bus et Étudiant récupérés =====");
+            System.out.println("Bus ID: " + lastBus.getId() + " | Immatriculation: " + lastBus.getImmatriculation());
+            System.out.println("Étudiant ID: " + lastEtudiant.getId() + " | Nom: " + lastEtudiant.getNom());
+
+            System.out.println("\n===== Test d'ajout d'un abonnement =====");
             AbonnementTransport abonnement = new AbonnementTransport(lastBus, lastEtudiant, Date.valueOf("2025-03-03"));
             if (abonnementDao.create(abonnement)) {
                 System.out.println("Abonnement ajouté avec succès !");
             } else {
-                System.out.println("Échec de l'ajout de l'abonnement.");
+                System.out.println(" Échec de l'ajout de l'abonnement.");
+                return;
+            }
+
+            // Liste des abonnements
+            List<AbonnementTransport> abonnementList = abonnementDao.findAll();
+            System.out.println("\n===== Liste des abonnements  =====");
+            for (AbonnementTransport a : abonnementList) {
+                System.out.println(" - Bus ID: " + a.getBus().getId() + " | Étudiant ID: " + a.getEtudiant().getId() + " | Date: " + a.getDateAbonnement());
+            }
+
+            // Suppression du dernier abonnement
+            System.out.println("\n===== Suppression du dernier abonnement =====");
+            if (abonnementDao.delete(abonnement)) {
+                System.out.println("Abonnement supprimé avec succès !");
+            } else {
+                System.out.println(" Échec de la suppression de l'abonnement. Vérifie si les IDs sont corrects.");
+            }
+
+            // Vérification après suppression
+            abonnementList = abonnementDao.findAll();
+            System.out.println("\n===== Liste des abonnements après suppression =====");
+            if (abonnementList.isEmpty()) {
+                System.out.println("✅ Aucun abonnement trouvé en base.");
+            } else {
+                for (AbonnementTransport a : abonnementList) {
+                    System.out.println(" - Bus ID: " + a.getBus().getId() + " | Étudiant ID: " + a.getEtudiant().getId() + " | Date: " + a.getDateAbonnement());
+                }
             }
         } else {
-            System.out.println("\nErreur : Impossible de créer un abonnement sans bus ou étudiant.");
+            System.out.println("\n⚠️ Erreur : Impossible de créer un abonnement sans bus ou étudiant.");
         }
-
-        System.out.println("\nListe des bus :");
-        for (Bus b : busList) {
-            System.out.println(" - " + b.getId() + " | " + b.getImmatriculation() + " | " + b.getNombrePlaces() + " places");
-        }
-
-        System.out.println("\nListe des étudiants :");
-        for (Etudiant e : etudiantList) {
-            System.out.println(" - " + e.getId() + " | " + e.getNom() + " " + e.getPrenom() + " | " + e.getEmail());
-        }
-
-        List<AbonnementTransport> abonnementList = abonnementDao.findAll();
-        System.out.println("\nListe des abonnements :");
-        for (AbonnementTransport a : abonnementList) {
-            System.out.println(" - Bus ID: " + a.getBus().getId() + " | Étudiant ID: " + a.getEtudiant().getId() + " | Date: " + a.getDateAbonnement());
-        }
-
-        // delete  enregistrements
-        /*
-        if (!abonnementList.isEmpty()) {
-            int abonnementId = abonnementList.get(abonnementList.size() - 1).getId();
-            abonnementDao.delete(abonnementId);
-        }
-
-        if (!busList.isEmpty()) {
-            busDao.delete(busList.get(busList.size() - 1).getId());
-        }
-
-        if (!etudiantList.isEmpty()) {
-            etudiantDao.delete(etudiantList.get(etudiantList.size() - 1).getId());
-        }
-        */
     }
 }
