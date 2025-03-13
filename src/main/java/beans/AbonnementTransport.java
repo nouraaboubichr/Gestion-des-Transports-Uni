@@ -3,55 +3,44 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package beans;
-
+import java.sql.Date;
 /**
  *
  * @author hp
  */
 
 
-import java.sql.Date;
-
 public class AbonnementTransport {
-    private int id;
-    private int busId;
-    private int etudiantId;
+    private Bus bus;
+    private Etudiant etudiant;
     private Date dateAbonnement;
 
-    public AbonnementTransport(int id, int busId, int etudiantId, Date dateAbonnement) {
-        this.id = id;
-        this.busId = busId;
-        this.etudiantId = etudiantId;
+    public AbonnementTransport(Bus bus, Etudiant etudiant, Date dateAbonnement) {
+        this.bus = bus;
+        this.etudiant = etudiant;
         this.dateAbonnement = dateAbonnement;
     }
 
-    public AbonnementTransport(int busId, int etudiantId, Date dateAbonnement) {
-        this.busId = busId;
-        this.etudiantId = etudiantId;
-        this.dateAbonnement = dateAbonnement;
+    public Bus getBus() {
+        return bus;
     }
 
-    public int getId() {
-        return id;
+    public void setBus(Bus bus) {
+        this.bus = bus;
     }
-    public void setId(int id) { 
-        this.id = id; 
+
+    public Etudiant getEtudiant() {
+        return etudiant;
     }
-    public int getBusId() { 
-        return busId; 
+
+    public void setEtudiant(Etudiant etudiant) {
+        this.etudiant = etudiant;
     }
-    public void setBusId(int busId) { 
-        this.busId = busId; 
-    }
-    public int getEtudiantId() {
-        return etudiantId;
-    }
-    public void setEtudiantId(int etudiantId) { 
-        this.etudiantId = etudiantId; 
-    }
+
     public Date getDateAbonnement() {
         return dateAbonnement;
     }
+
     public void setDateAbonnement(Date dateAbonnement) {
         this.dateAbonnement = dateAbonnement;
     }
